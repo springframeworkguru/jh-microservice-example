@@ -48,7 +48,7 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
-          - dependency-cache-{{ checksum "node_modules" }}
+          - node-dependency-cache-{{ checksum "node_modules" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
 
@@ -78,4 +78,4 @@ jobs:
       - save_cache:
           paths:
             - ~/repo/node_modules
-          key: v1-dependencies-{{ checksum "node_modules" }}
+          key: node-dependency-cache-{{ checksum "node_modules" }}
