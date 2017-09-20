@@ -70,6 +70,8 @@ jobs:
       - store_artifacts:
           path: ~/junit
 
+      - setup_remote_docker
+
       - run:
           name: Build Docker Image
           command: ./gradlew bootRepackage -Pprod buildDocker
