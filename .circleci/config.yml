@@ -70,6 +70,10 @@ jobs:
       - store_artifacts:
           path: ~/junit
 
+      - run:
+          name: Build Docker Image
+          command: ./gradlew bootRepackage -Pprod buildDocker
+
       - save_cache:
           paths:
             - ~/.m2
