@@ -1,0 +1,82 @@
+# Java Maven CircleCI 2.0 configuration file
+
+# Check https://circleci.com/docs/2.0/language-java/ for more details
+#
+version: 2
+jobs:
+  build:
+    docker:
+      # specify the version you desire here
+      - image: circleci/openjdk:8-jdk
+
+      # Specify service dependencies here if necessary
+      # CircleCI maintains a library of pre-built images
+      # documented at https://circleci.com/docs/2.0/circleci-images/
+      # - image: circleci/postgres:9.4
+
+    working_directory: ~/repo
+
+    environment:
+      # Customize the JVM maximum heap limit
+      #JVM_OPTS: -Xmx2g -XX:MaxMetaspaceSize=1024m -Xms512m -XX:+HeapDumpOnOutOfMemoryError
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      #TODO create custom Docker image with Node and Yarn Installed
+      # Install Node for JH Build
+      - run:
+          name: Download Node
+          command: curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash
+      - run:
+          name: Install Node
+          command: sudo apt-get install -y nodejs
+      - run:
+          name: update-npm
+          command: sudo npm install -g npm@latest
+
+      # Install Yarn
+      - run:
+          name: Download Yarn
+          command: curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+      - run:
+            name: Install Yarn
+            command: sudo apt-get update && sudo apt-get install yarn
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "build.gradle" }}
+          - dependency-cache-{{ checksum "~/repo/node_modules" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: gradle dependencies
+
+      # run tests and package
+      - run: ./gradlew clean test
+
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
+
+      - store_test_results:
+          path: ~/junit
+
+      - store_artifacts:
+          path: ~/junit
+
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - save_cache:
+          paths:
+            - ~/repo/node_modules
+          key: v1-dependencies-{{ checksum "~/repo/node_modules" }}
+
