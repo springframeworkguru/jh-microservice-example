@@ -1,3 +1,9 @@
+[![CircleCI](https://circleci.com/gh/springframeworkguru/jh-microservice-example.svg?style=svg)](https://circleci.com/gh/springframeworkguru/jh-microservice-example)
+
+# Spring Boot Microservice Example
+
+The source code in this repository is for a blog post about building Spring Boot mircoservices with CircleCI.
+
 # jhMicroserviceExample
 This application was generated using JHipster 4.7.0, you can find documentation and help at [https://jhipster.github.io/documentation-archive/v4.7.0](https://jhipster.github.io/documentation-archive/v4.7.0).
 

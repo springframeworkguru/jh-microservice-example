@@ -48,6 +48,7 @@ jobs:
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "build.gradle" }}
+          # Uncomment if your build has UI components.
           #- node-dependency-cache-{{ checksum "node_modules" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
@@ -81,6 +82,7 @@ jobs:
             - ~/.m2
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+     # Uncomment if your build has UI components.
      # - save_cache:
      #     paths:
      #       - ~/repo/node_modules
